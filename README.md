@@ -1,62 +1,106 @@
 # 一、算法原理探究
 
-向我说明下回溯算法，动态规划和减枝算法的数学原理和特征，及其他们如何优化？
-
-让我逐步分析这三种算法的原理和优化方法：
+回溯算法，动态规划和剪枝算法的数学原理和特征，及其他们如何优化？
 
 ### 1. 回溯算法 (Backtracking)
 - **数学原理**：
-  - 基于深度优先搜索(DFS)的思想
-  - 通过系统地搜索问题的所有可能解来找到所需的解
-  - 可以用决策树的形式表示搜索空间
+  - 基于**深度优先搜索**(DFS)的思想
+  - 通过系统地搜索问题的**所有可能解**来找到所需的解
+  - 可以用**决策树**的形式表示搜索空间
 
 - **主要特征**：
-  - 递归实现
+  - **递归**实现
   - 维护当前状态
-  - 遇到不满足条件时及时回退
+  - 遇到不满足条件时**及时回退**
   - 适合解决排列、组合类问题
 
 - **优化方法**：
-  - 合理设计剪枝条件
+  - 合理设计**剪枝条件**
   - 优化状态表示
-  - 记忆化搜索
+  - **记忆化搜索**
 
 ### 2. 动态规划 (Dynamic Programming)
 - **数学原理**：
-  - 基于最优子结构
-  - 重叠子问题
-  - 状态转移方程
-  - 无后效性原则
+  - 基于**最优子结构**
+  - **重叠子问题**
+  - **状态转移方程**
+  - **无后效性原则**
 
 - **主要特征**：
-  - 自底向上求解
-  - 存储中间结果
+  - **自底向上**求解
+  - 存储**中间结果**
   - 通过子问题的最优解构造原问题的最优解
 
 - **优化方法**：
-  - 状态压缩
-  - 滚动数组
+  - **状态压缩**
+  - **滚动数组**
   - 空间优化
   - 预处理技术
 
 ### 3. 剪枝算法 (Pruning)
 - **数学原理**：
-  - 基于可行性判断
-  - 基于最优性判断
+  - 基于**可行性**判断
+  - 基于**最优性**判断
   - 估价函数
 
 - **主要特征**：
-  - 提前判断无效分支
-  - 减少搜索空间
+  - 提前**判断无效**分支
+  - **减少搜索空间**
   - 常与回溯、分支限界法结合
 
 - **优化方法**：
   - 设计更优的估价函数
-  - 合理设计剪枝条件
+  - 合理设计**剪枝条件**
   - 优化判断顺序
-  - 使用启发式规则
+  - 使用**启发式规则**
 
-### 综合优化建议：
+### 4. 分治算法 (Divide and Conquer)
+
+**数学原理**
+
+分治算法（Divide and Conquer）基于递归思想，将一个复杂问题分解为若干个规模较小但结构相似的子问题，递归地解决这些子问题，然后将子问题的解合并，得到原问题的解。其核心数学原理是 **递归分解和合并**，通常用递归方程来描述：
+
+使用主定理（Master Theorem）可分析分治算法的复杂度：
+
+![image-20241125203434572](images/image-20241125203434572.png)
+
+**特征**
+
+1. **分解（Divide）**：将问题分解为多个子问题。
+
+2. **解决（Conquer）**：递归地解决子问题。
+
+3. **合并（Combine）**：将子问题的解合并成原问题的解。
+
+4. **递归终止条件（Base Case）**：子问题可以直接求解时结束递归。
+
+**分治算法的优化**
+
+分治算法在实现和性能优化方面有多种策略：
+
+1. **减少重叠计算**（动态规划思想）：
+   - 如果不同的子问题有重复计算的部分，可以通过 **备忘录** 或 **动态规划** 来存储并复用计算结果，例如在矩阵链乘法问题中。
+   
+2. **优化递归深度**：
+   - 尽量减少递归深度，如使用尾递归优化，或者在一定规模时切换为非递归算法。
+   - 例如快速排序在子数组规模较小时切换到插入排序。
+   
+3. **并行计算**：
+   - 如果子问题独立，可以通过并行处理加速计算，尤其是在多核 CPU 或 GPU 环境下。
+   - 如快速傅里叶变换（FFT）可利用并行计算加速。
+   
+4. **减少分解和合并的开销**：
+   - 优化合并阶段的算法，例如归并排序中减少内存复制或直接操作原数组。
+   - 使用随机化策略减少最坏情况的发生概率，例如快速排序中随机选择主元。
+   
+5. **剪枝优化**：
+
+   - 在分解时提前终止无意义的计算。例如在分支限界问题中，提前跳过不可能的分支。
+
+6. **使用缓存（缓存友好）**：
+- 通过改变数据访问模式提升缓存命中率，例如对矩阵分块进行分治可以有效利用缓存。
+
+### 综合优化建议
 1. **算法选择**：
    - 问题规模小，解空间大：适合回溯
    - 具有重叠子问题：适合动态规划
@@ -401,70 +445,20 @@ void backtrack(int graph[MAX_N][MAX_N], int n, int allMinPaths[MAX_N][MAX_N],
 
 动态规划能够解决的序列问题如下
 
-1. **最长递增子序列（Longest Increasing Subsequence, LIS）**：
-   - 在一个给定的序列中找到最长的递增子序列。
-2. **最长公共子序列（Longest Common Subsequence, LCS）**：
+1. **最长公共子序列（Longest Common Subsequence, LCS）**：
    - 在两个序列中找到最长的公共子序列。
-3. **最大子数组和（Maximum Subarray Sum）**：
-   - 在一个给定的数组中找到具有最大和的连续子数组。
-4. **分割等和子集（Partition Equal Subset Sum）**：
+2. **分割等和子集（Partition Equal Subset Sum）**：
    - 给定一个非负整数数组，判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
-5. **子集和问题（Subset Sum Problem）**：
+3. **子集和问题（Subset Sum Problem）**：
    - 给定一个非负整数数组和一个目标和，判断是否存在一个子集，其元素和等于目标和。
-6. **硬币找零（Coin Change）**：
+4. **硬币找零（Coin Change）**：
    - 给定不同面额的硬币和一个总金额，计算凑成该总金额所需的最少的硬币个数。
-7. **跳跃游戏（Jump Game）**：
-   - 给定一个非负整数数组，每个元素代表你在该位置可以跳跃的最大长度，判断你是否能够到达数组的最后一个位置。
-8. **爬楼梯（Climbing Stairs）**：
+5. **爬楼梯（Climbing Stairs）**：
    - 给定一个楼梯有 `n` 级台阶，每次可以爬 1 级或 2 级，计算有多少种不同的方法可以爬到楼顶。
-9. **回文子序列（Palindromic Subsequence）**：
+6. **回文子序列（Palindromic Subsequence）**：
    - 在一个给定的序列中找到最长的回文子序列。
 
-### 1. 最长递增子序列（LIS）
-
-```c
-#include <stdio.h>
-
-int lis(int arr[], int n) {
-    int lis[n];
-    int max = 0;
-
-    for (int i = 0; i < n; i++) {
-        lis[i] = 1;
-    }
-
-    for (int i = 1; i < n; i++) {
-        for (int j = 0; j < i; j++) {
-            if (arr[i] > arr[j] && lis[i] < lis[j] + 1) {
-                lis[i] = lis[j] + 1;
-            }
-        }
-    }
-
-    for (int i = 0; i < n; i++) {
-        if (max < lis[i]) {
-            max = lis[i];
-        }
-    }
-
-    return max;
-}
-
-int main() {
-    int arr[] = {10, 22, 9, 33, 21, 50, 41, 60, 80};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    printf("Length of LIS is %d\n", lis(arr, n));
-    return 0;
-}
-```
-
-**时间复杂度**：O(n^2)
-
-- 外层循环遍历数组：O(n)
-- 内层循环遍历当前元素之前的所有元素：O(n)
-- 总时间复杂度：O(n) * O(n) = O(n^2)
-
-### 2. 最长公共子序列（LCS）
+### 1. 最长公共子序列（LCS）
 
 ```c
 #include <stdio.h>
@@ -504,77 +498,46 @@ int main() {
 - 内层循环遍历字符串Y：O(n)
 - 总时间复杂度：O(m) * O(n) = O(m * n)
 
-### 3. 最大子数组和（Maximum Subarray Sum）
+### 2. 分割等和子集（Partition Equal Subset Sum）
+
+> https://leetcode.cn/problems/partition-equal-subset-sum/
 
 ```c
-#include <stdio.h>
-
-int maxSubArraySum(int a[], int size) {
-    int max_so_far = a[0];
-    int curr_max = a[0];
-
-    for (int i = 1; i < size; i++) {
-        curr_max = (a[i] > curr_max + a[i]) ? a[i] : curr_max + a[i];
-        max_so_far = (max_so_far > curr_max) ? max_so_far : curr_max;
-    }
-
-    return max_so_far;
-}
-
-int main() {
-    int a[] = {-2, -3, 4, -1, -2, 1, 5, -3};
-    int n = sizeof(a) / sizeof(a[0]);
-    printf("Maximum contiguous sum is %d\n", maxSubArraySum(a, n));
-    return 0;
-}
-```
-
-**时间复杂度**：O(n)
-
-- 单个循环遍历数组：O(n)
-- 总时间复杂度：O(n)
-
-### 4. 分割等和子集（Partition Equal Subset Sum）
-
-```c
-#include <stdio.h>
-#include <stdbool.h>
-
-bool canPartition(int nums[], int n) {
-    int sum = 0;
-    for (int i = 0; i < n; i++) {
-        sum += nums[i];
-    }
-
-    if (sum % 2 != 0) {
-        return false;
-    }
-
-    sum /= 2;
-    bool dp[sum + 1];
-    for (int i = 0; i <= sum; i++) {
-        dp[i] = false;
-    }
-    dp[0] = true;
-
-    for (int i = 0; i < n; i++) {
-        for (int j = sum; j >= nums[i]; j--) {
-            dp[j] = dp[j] || dp[j - nums[i]];
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int n = nums.length;
+        if (n < 2) {
+            return false;
         }
+        int sum = 0, maxNum = 0;
+        for (int num : nums) {
+            sum += num;
+            maxNum = Math.max(maxNum, num);
+        }
+        if (sum % 2 != 0) {
+            return false;
+        }
+        int target = sum / 2;
+        if (maxNum > target) {
+            return false;
+        }
+        boolean[][] dp = new boolean[n][target + 1];
+        for (int i = 0; i < n; i++) {
+            dp[i][0] = true;
+        }
+        dp[0][nums[0]] = true;
+        for (int i = 1; i < n; i++) {
+            int num = nums[i];
+            for (int j = 1; j <= target; j++) {
+                if (j >= num) {
+                    dp[i][j] = dp[i - 1][j] | dp[i - 1][j - num];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        return dp[n - 1][target];
     }
-
-    return dp[sum];
-}
-
-int main() {
-    int nums[] = {1, 5, 11, 5};
-    int n = sizeof(nums) / sizeof(nums[0]);
-    if (canPartition(nums, n)) {
-        printf("Can partition\n");
-    } else {
-        printf("Cannot partition\n");
-    }
-    return 0;
 }
 ```
 
@@ -584,7 +547,9 @@ int main() {
 - 内层循环遍历部分和：O(sum)
 - 总时间复杂度：O(n) * O(sum) = O(n * sum)
 
-### 5. 子集和问题（Subset Sum Problem）
+### 3. 子集和问题（Subset Sum Problem）
+
+> 这个题和上个题算是半斤八两了
 
 ```c
 #include <stdio.h>
@@ -633,7 +598,7 @@ int main() {
 - 内层循环遍历部分和：O(sum)
 - 总时间复杂度：O(n) * O(sum) = O(n * sum)
 
-### 6. 硬币找零（Coin Change）
+### 4. 硬币找零（Coin Change）
 
 ```c
 #include <stdio.h>
@@ -657,7 +622,6 @@ int coinChange(int coins[], int m, int V) {
             }
         }
     }
-
     return dp[V] == INT_MAX ? -1 : dp[V];
 }
 
@@ -676,40 +640,7 @@ int main() {
 - 内层循环遍历硬币：O(m)
 - 总时间复杂度：O(V) * O(m) = O(m * V)
 
-### 7. 跳跃游戏（Jump Game）
-
-```c
-#include <stdio.h>
-#include <stdbool.h>
-
-bool canJump(int nums[], int n) {
-    int lastPos = n - 1;
-    for (int i = n - 2; i >= 0; i--) {
-        if (i + nums[i] >= lastPos) {
-            lastPos = i;
-        }
-    }
-    return lastPos == 0;
-}
-
-int main() {
-    int nums[] = {2, 3, 1, 1, 4};
-    int n = sizeof(nums) / sizeof(nums[0]);
-    if (canJump(nums, n)) {
-        printf("Can reach the last index\n");
-    } else {
-        printf("Cannot reach the last index\n");
-    }
-    return 0;
-}
-```
-
-**时间复杂度**：O(n)
-
-- 单个循环遍历数组：O(n)
-- 总时间复杂度：O(n)
-
-### 8. 爬楼梯（Climbing Stairs）
+### 5. 爬楼梯（Climbing Stairs）
 
 ```c
 #include <stdio.h>
@@ -739,7 +670,7 @@ int main() {
 - 单个循环遍历台阶数：O(n)
 - 总时间复杂度：O(n)
 
-### 9. 回文子序列（Palindromic Subsequence）
+### 6. 回文子序列（Palindromic Subsequence）
 
 ```c
 #include <stdio.h>
@@ -844,42 +775,6 @@ int main() {
   - 该算法使用一个循环从 3 到 n 计算每一级台阶的方法数，因此时间复杂度为 O(n)。
 - **空间复杂度**：O(n)
   - 该算法使用一个大小为 n+1 的数组来存储每一级台阶的方法数，因此空间复杂度为 O(n)。
-
-#### 优化
-
-可以进一步优化空间复杂度到 O(1)，因为在计算 `dp[i]` 时，只需要 `dp[i-1]` 和 `dp[i-2]`。因此，可以只用两个变量来存储这两个值。
-
-```c
-#include <stdio.h>
-
-int climbStairs(int n) {
-    if (n == 1) {
-        return 1;
-    }
-    int a = 1, b = 2;
-    for (int i = 3; i <= n; i++) {
-        int temp = b;
-        b = a + b;
-        a = temp;
-    }
-    return b;
-}
-
-int main() {
-    int n = 5;
-    printf("Number of ways to climb %d stairs is %d\n", n, climbStairs(n));
-    return 0;
-}
-```
-
-#### 优化后的时间复杂度和空间复杂度
-
-- **时间复杂度**：O(n)
-  - 依然是一个循环从 3 到 n 计算每一级台阶的方法数，因此时间复杂度为 O(n)。
-- **空间复杂度**：O(1)
-  - 只使用了常数个变量来存储中间结果，因此空间复杂度为 O(1)。
-
-通过动态规划和空间优化，我们可以高效地解决上台阶问题。
 
 ### 2.电梯上下楼问题（贪心）
 
@@ -1085,7 +980,7 @@ int main() {
 
 ## 题目描述
 
-关于树塔/树状（一棵树，塔型结果或者图型结构）
+关于树塔/树状（一棵树，塔型结构或者图型结构）
 
 1.哪条线路的数据流最大或最小
 
