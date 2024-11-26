@@ -21,11 +21,12 @@
 
 ### 2. 动态规划 (Dynamic Programming)
 - **数学原理**：
+  - 状态转移方程： f(x) = g(f(x_1), f(x_2), \ldots) ，描述如何从子问题的解构造当前问题的解。
   - 基于**最优子结构**
   - **重叠子问题**
   - **状态转移方程**
   - **无后效性原则**
-
+  
 - **主要特征**：
   - **自底向上**求解
   - 存储**中间结果**
@@ -60,7 +61,7 @@
 
 分治算法（Divide and Conquer）基于递归思想，将一个复杂问题分解为若干个规模较小但结构相似的子问题，递归地解决这些子问题，然后将子问题的解合并，得到原问题的解。其核心数学原理是 **递归分解和合并**，通常用递归方程来描述：
 
-使用主定理（Master Theorem）可分析分治算法的复杂度：
+使用**主定理（Master Theorem）**可分析分治算法的复杂度：
 
 ![image-20241125203434572](images/image-20241125203434572.png)
 
@@ -457,6 +458,9 @@ void backtrack(int graph[MAX_N][MAX_N], int n, int allMinPaths[MAX_N][MAX_N],
    - 给定一个楼梯有 `n` 级台阶，每次可以爬 1 级或 2 级，计算有多少种不同的方法可以爬到楼顶。
 6. **回文子序列（Palindromic Subsequence）**：
    - 在一个给定的序列中找到最长的回文子序列。
+7. **最大子段和 (Maximum subsegment sum)**
+   - 找出一个数组中最大连续子数组
+
 
 ### 1. 最长公共子序列（LCS）
 
@@ -501,6 +505,10 @@ int main() {
 ### 2. 分割等和子集（Partition Equal Subset Sum）
 
 > https://leetcode.cn/problems/partition-equal-subset-sum/
+>
+> 非常经典的题目，其状态压缩详见官方题解，或者参见下列讲解，本质上和01背包类似（两者状态转移思想是一样的）
+>
+> https://www.bilibili.com/video/BV1oZ4y1G7QY
 
 ```c
 class Solution {
@@ -550,6 +558,8 @@ class Solution {
 ### 3. 子集和问题（Subset Sum Problem）
 
 > 这个题和上个题算是半斤八两了
+>
+> 算法思维一模一样
 
 ```c
 #include <stdio.h>
@@ -616,6 +626,7 @@ int coinChange(int coins[], int m, int V) {
         for (int j = 0; j < m; j++) {
             if (coins[j] <= i) {
                 int sub_res = dp[i - coins[j]];
+                // 第二个判断就是最小结果的转移
                 if (sub_res != INT_MAX && sub_res + 1 < dp[i]) {
                     dp[i] = sub_res + 1;
                 }
@@ -716,6 +727,31 @@ int main() {
 - 外层循环遍历子序列长度：O(n)
 - 内层循环遍历子序列起始位置：O(n)
 - 总时间复杂度：O(n) * O(n) = O(n^2)
+
+### 7. 最大子段和 (Maximum subsegment sum)
+
+> https://leetcode.cn/problems/maximum-subarray/
+
+```c
+//在正负相交的数组中找到最大子数组
+int maxSubArray(int* nums, int numsSize){
+    //动态规划模板题--常见
+    int dp[numsSize];
+    dp[0]=nums[0];
+    int max=dp[0];
+    for(int i=1;i<numsSize;i++){
+       if(dp[i-1]<=0){
+           dp[i]=nums[i];
+       }
+       else dp[i]=dp[i-1]+nums[i];
+       max=dp[i]>max?dp[i]:max;
+    }
+    return max;
+}
+//采用dp原因：for循环造成大量重复运算
+
+//dp思想：后面的值取决于前面的值：每次计算不能白算，将最优解（最大解往后面传
+```
 
 # 三、算法设计与分析
 
@@ -1062,6 +1098,16 @@ int main() {
 
 你可以根据需要修改代码以适应具体的需求，例如计算最小流量或评价某个形式。
 
+## 实际考题
+
+> 一个很简单的自底向上的状态转移，注意其思路上的描述
+
+数学原理：
+
+![image-20241126181038656](images/image-20241126181038656.png)
+
+![image-20241126180715005](images/image-20241126180715005.png)
+
 # 五、算法应用
 
 从所有课题中随机抽取
@@ -1070,5 +1116,3 @@ int main() {
 - 什么算法
 - 算法分析
 - 问题解决
-
-> 耗时太高，待有缘人总结
